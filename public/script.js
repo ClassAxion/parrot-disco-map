@@ -1,13 +1,5 @@
 const socket = io({ autoConnect: true, reconnection: true });
 
-socket.on('connect', function () {
-    socket.emit('discovery');
-});
-
-socket.on('reconnect', function () {
-    //socket.emit('discovery');
-});
-
 const defaultPosition = {
     lat: 53.34912,
     lon: 17.64003,
