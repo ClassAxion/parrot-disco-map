@@ -4,7 +4,7 @@ import { Server } from 'http';
 import logger from './utils/logger';
 import paths, { Paths } from './utils/paths';
 
-const port: number = Number(process.env.PORT || '8080');
+const port: number = Number(process.env.PORT || '8000');
 
 const app: Application = express();
 
