@@ -38,6 +38,8 @@ function updateDisco(discoId, latitude, longitude, altitude, angle) {
 
     const icon = marker._icon;
 
+    icon.style['transform-origin'] = '50% 50%';
+
     if (!icon.style.transform.includes('rotate')) {
         icon.style.transform += ` rotate(${angle}deg)`;
     } else {
@@ -61,8 +63,8 @@ function updateDisco(discoId, latitude, longitude, altitude, angle) {
     };
 }
 
-socket.on('update', function ({ discoId, latitude, longitude, altitude, angle }) {
-    updateDisco(discoId, latitude, longitude, altitude, angle);
+socket.on('update', function ({ id: discoId, location, altitude, angle }) {
+    updateDisco(discoId, location.latitude, location.longitude, altitude, angle);
 });
 
 setInterval(function () {
