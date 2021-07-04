@@ -28,12 +28,14 @@ function createMarker(latitude, longitude) {
 
 let follow = true;
 
-function updateDisco(discoId, latitude, longitude, altitude, angle) {
+function updateDisco(discoId, latitude, longitude, altitude, angle, speed) {
     const marker = !discoOnMap[discoId] ? createMarker(latitude, longitude) : discoOnMap[discoId].marker;
 
     const latLng = [latitude, longitude];
 
-    marker.bindPopup('#' + discoId + ' ' + altitude + 'm');
+    const kmh = (speed * 3.6).toFixed(0);
+
+    marker.bindPopup('#' + discoId + ' ' + altitude + 'm' + ' ' + kmh + ' km/h');
     marker.setLatLng(latLng);
 
     const icon = marker._icon;
@@ -63,8 +65,8 @@ function updateDisco(discoId, latitude, longitude, altitude, angle) {
     };
 }
 
-socket.on('update', function ({ id: discoId, location, altitude, angle }) {
-    updateDisco(discoId, location.latitude, location.longitude, altitude, angle);
+socket.on('update', function ({ id: discoId, location, altitude, angle, speed }) {
+    updateDisco(discoId, location.latitude, location.longitude, altitude, angle, speed);
 });
 
 setInterval(function () {
