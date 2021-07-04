@@ -37,6 +37,9 @@ const sendUpdate = (data) => {
     }
 };
 
+const variableMap = (value, inMin, inMax, outMin, outMax) =>
+    ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+
 io.on('connection', async (socket) => {
     const address: string = socket.handshake.address;
 
@@ -62,7 +65,12 @@ io.on('connection', async (socket) => {
         sendUpdate(discoOnMap[discoId]);
     });
 
-    socket.on('angle', ({ angle }) => {
+    socket.on('yaw', ({ yaw }) => {
+        let angle = Number(variableMap(yaw, -180, 180, 0, 360).toFixed(0)) - 180;
+
+        if (angle > 360) angle -= 360;
+        if (angle < 0) angle = 360 - angle * -1;
+
         discoOnMap[discoId].angle = angle;
 
         sendUpdate(discoOnMap[discoId]);
