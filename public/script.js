@@ -28,6 +28,16 @@ function createMarker(latitude, longitude) {
 
 let follow = true;
 
+function deleteDisco(discoId) {
+    const marker = discoOnMap[discoId].marker;
+
+    if (!marker) return;
+
+    map.removeLayer(marker);
+
+    delete discoOnMap[discoId];
+}
+
 function updateDisco(discoId, location, altitude, angle, speed) {
     if (!location) return;
 
@@ -37,7 +47,13 @@ function updateDisco(discoId, location, altitude, angle, speed) {
     if (!angle) angle = 0;
     if (!speed) speed = 0;
 
-    const marker = !discoOnMap[discoId] ? createMarker(latitude, longitude) : discoOnMap[discoId].marker;
+    const isNew = !discoOnMap[discoId];
+
+    if (isNew) {
+        console.debug(`Creating new disco marker..`);
+    }
+
+    const marker = isNew ? createMarker(latitude, longitude) : discoOnMap[discoId].marker;
 
     const latLng = [latitude, longitude];
 
@@ -73,6 +89,21 @@ function updateDisco(discoId, location, altitude, angle, speed) {
     };
 }
 
+function removeExpired() {
+    const ids = Object.keys(discoOnMap);
+    const timeoutMs = 10000;
+
+    for (const discoId of ids) {
+        const updatedAt = discoOnMap[discoId].updatedAt;
+
+        if (Date.now() - updatedAt > timeoutMs) {
+            deleteDisco(discoId);
+
+            console.debug(`Removed expired disco marker..`);
+        }
+    }
+}
+
 socket.on('update', function (data) {
     console.log(data);
 
@@ -82,6 +113,8 @@ socket.on('update', function (data) {
 });
 
 setInterval(function () {
+    removeExpired();
+
     const discoIds = Object.keys(discoOnMap);
 
     for (const discoId of discoIds) {
