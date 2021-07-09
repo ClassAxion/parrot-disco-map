@@ -59,7 +59,14 @@ function updateDisco(discoId, location, altitude, angle, speed) {
 
     const kmh = (speed * 3.6).toFixed(0);
 
-    marker.bindPopup('#' + discoId + ' ' + altitude.toFixed(0) + 'm' + ' ' + kmh + ' km/h');
+    const text = '#' + discoId + ' ' + altitude.toFixed(0) + 'm' + ' ' + kmh + ' km/h';
+
+    marker.unbindPopup();
+    marker.bindPopup(text);
+
+    marker.unbindTooltip();
+    marker.bindTooltip(text, { permanent: true, direction: 'top', opacity: 0.5 }).openTooltip();
+
     marker.setLatLng(latLng);
 
     const icon = marker._icon;
@@ -87,6 +94,10 @@ function updateDisco(discoId, location, altitude, angle, speed) {
         marker,
         updatedAt: Date.now(),
     };
+}
+
+function test() {
+    updateDisco('test', { latitude: defaultPosition.lat, longitude: defaultPosition.lon }, 50, 212);
 }
 
 function removeExpired() {
