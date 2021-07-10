@@ -102,7 +102,7 @@ function test() {
 
 function removeExpired() {
     const ids = Object.keys(discoOnMap);
-    const timeoutMs = 10000;
+    const timeoutMs = 30000;
 
     for (const discoId of ids) {
         const updatedAt = discoOnMap[discoId].updatedAt;

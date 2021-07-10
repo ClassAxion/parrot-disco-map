@@ -88,6 +88,16 @@ io.on('connection', async (socket) => {
         clients = clients.filter((o) => o.socketId !== socketId);
     });
 
+    socket.on('test', () => {
+        sendUpdate({
+            id: 'test',
+            location: { latitude: 53.34912, longitude: 17.64003 },
+            altitude: 100,
+            speed: 8,
+            angle: 180,
+        });
+    });
+
     clients.push({
         socketId: socket.id,
         socket,
