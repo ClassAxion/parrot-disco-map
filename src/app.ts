@@ -45,45 +45,59 @@ io.on('connection', async (socket) => {
 
     const socketId: string = socket.id;
 
-    const discoId = Math.random().toString(36).slice(2, 8);
-
-    discoOnMap[discoId] = {
-        id: discoId,
-    };
-
     logger.info(`Connection ${socketId} made from ${address}`);
 
-    socket.on('location', ({ latitude, longitude }) => {
-        discoOnMap[discoId].location = { latitude, longitude };
+    socket.on('disco', ({ id }) => {
+        socket.discoId = id;
 
-        sendUpdate(discoOnMap[discoId]);
+        discoOnMap[id] = {
+            id,
+        };
+
+        logger.info(`Disco ${id} connected`);
+    });
+
+    socket.on('location', ({ latitude, longitude }) => {
+        if (!socket.discoId) return;
+
+        discoOnMap[socket.discoId].location = { latitude, longitude };
+
+        sendUpdate(discoOnMap[socket.discoId]);
     });
 
     socket.on('altitude', ({ altitude }) => {
-        discoOnMap[discoId].altitude = altitude;
+        if (!socket.discoId) return;
 
-        sendUpdate(discoOnMap[discoId]);
+        discoOnMap[socket.discoId].altitude = altitude;
+
+        sendUpdate(discoOnMap[socket.discoId]);
     });
 
     socket.on('yaw', ({ yaw }) => {
+        if (!socket.discoId) return;
+
         let angle = Number(variableMap(yaw, -180, 180, 0, 360).toFixed(0)) - 180;
 
         if (angle > 360) angle -= 360;
         if (angle < 0) angle = 360 - angle * -1;
 
-        discoOnMap[discoId].angle = angle;
+        discoOnMap[socket.discoId].angle = angle;
 
-        sendUpdate(discoOnMap[discoId]);
+        sendUpdate(discoOnMap[socket.discoId]);
     });
 
     socket.on('speed', ({ speed }) => {
-        discoOnMap[discoId].speed = speed;
+        if (!socket.discoId) return;
 
-        sendUpdate(discoOnMap[discoId]);
+        discoOnMap[socket.discoId].speed = speed;
+
+        sendUpdate(discoOnMap[socket.discoId]);
     });
 
     socket.on('disconnect', () => {
         logger.info(`Socket ${socketId} disconnected`);
+
+        logger.info(`Disco ${socket.discoId} connected`);
 
         clients = clients.filter((o) => o.socketId !== socketId);
     });

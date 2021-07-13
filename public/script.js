@@ -26,7 +26,7 @@ function createMarker(latitude, longitude) {
     return marker;
 }
 
-let follow = true;
+let follow = false;
 
 function deleteDisco(discoId) {
     const marker = discoOnMap[discoId].marker;
