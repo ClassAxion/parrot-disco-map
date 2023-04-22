@@ -48,6 +48,14 @@ io.on('connection', async (socket) => {
     logger.info(`Connection ${socketId} made from ${address}`);
 
     socket.on('disco', ({ id }) => {
+        if (!id) {
+            socket.close()
+
+            logger.info(`Dropped invalid connection`)
+
+            return
+        }
+
         socket.discoId = id;
 
         discoOnMap[id] = {
