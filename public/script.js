@@ -5,7 +5,7 @@ const defaultPosition = {
     lon: 17.64003,
 };
 
-const map = L.map('map').setView([defaultPosition.lat, defaultPosition.lon], 15);
+const map = L.map('map').setView([defaultPosition.lat, defaultPosition.lon], 6);
 
 L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
     attribution: 'Parrot Disco Live Map',
