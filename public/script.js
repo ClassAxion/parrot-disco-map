@@ -5,7 +5,11 @@ const defaultPosition = {
     lon: 17.64003,
 };
 
-const map = L.map('map').setView([defaultPosition.lat, defaultPosition.lon], 6);
+const params = new URLSearchParams(window.location.search)
+
+const zoom = Number(params.get('zoom') || '6')
+
+const map = L.map('map').setView([defaultPosition.lat, defaultPosition.lon], zoom);
 
 L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
     attribution: 'Parrot Disco Live Map',
@@ -26,7 +30,7 @@ function createMarker(latitude, longitude) {
     return marker;
 }
 
-let follow = false;
+let follow = params.get('follow') || false;
 
 function deleteDisco(discoId) {
     const marker = discoOnMap[discoId].marker;
