@@ -103,9 +103,11 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('disconnect', () => {
-        logger.info(`Socket ${socketId} disconnected`);
-
-        logger.info(`Disco ${socket.discoId} connected`);
+        if (!socket.discoId) {
+            logger.info(`Socket ${socketId} disconnected (without disco)`);
+        } else {
+            logger.info(`Socket ${socketId} disconnected (with disco ${socket.discoId})`);
+        }
 
         clients = clients.filter((o) => o.socketId !== socketId);
     });
